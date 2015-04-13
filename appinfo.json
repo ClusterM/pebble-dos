@@ -1,0 +1,26 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "clusterrr@clusterrr.com",
+    "longName": "DOS Terminal",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "fonts/terminal.ttf",
+                "name": "FONT_TERMINAL_32",
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "2",
+    "shortName": "DOS Terminal",
+    "uuid": "701939f5-5804-40d0-91ec-16a098fa8bb5",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
