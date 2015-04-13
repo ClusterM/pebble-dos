@@ -61,18 +61,6 @@ void tick(struct tm *tick_time, TimeUnits units_changed)
   start_draw();
 }
 
-void focus_handler(bool in_focus) {
-  if (in_focus) {
-    if (rand() % 5 == 0) // some joke :)
-    {
-      text_layer_set_text(text_layer, "C:\\>format\nc:_");
-      if (timer) app_timer_cancel(timer);
-      time_ticks = state = 0;
-      timer = app_timer_register(500, app_timer, NULL); 
-    }      
-  }
-}
-
 void handle_init(void) {
   // Create a window and text layer
   window = window_create();
@@ -95,13 +83,6 @@ void handle_init(void) {
   window_stack_push(window, true);
   
   tick_timer_service_subscribe(MINUTE_UNIT, tick);
-  
-  //start_draw();
-  // App Logging!
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Just pushed a window!");
-  
-  srand(time(NULL));
-  app_focus_service_subscribe(focus_handler);
 }
 
 void handle_deinit(void) {
@@ -117,8 +98,6 @@ void handle_deinit(void) {
   
   // Unload font
   fonts_unload_custom_font(font);
-  
-  app_focus_service_unsubscribe();
 }
 
 int main(void) {
