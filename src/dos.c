@@ -58,36 +58,50 @@ void start_draw()
 
 void tick(struct tm *tick_time, TimeUnits units_changed)
 {
-  //if (!timer)
-    start_draw();
+  start_draw();
+}
+
+void focus_handler(bool in_focus) {
+  if (in_focus) {
+    if (rand() % 5 == 0) // some joke :)
+    {
+      text_layer_set_text(text_layer, "C:\\>format\nc:_");
+      if (timer) app_timer_cancel(timer);
+      time_ticks = state = 0;
+      timer = app_timer_register(500, app_timer, NULL); 
+    }      
+  }
 }
 
 void handle_init(void) {
-	// Create a window and text layer
-	window = window_create();
+  // Create a window and text layer
+  window = window_create();
   window_set_background_color(window, GColorBlack);
-	text_layer = text_layer_create(GRect(2, -5, 144, 168));
+  text_layer = text_layer_create(GRect(2, -5, 144, 168));
   
   font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TERMINAL_32));
-	
-	// Set the text, font, and text alignment
-	text_layer_set_font(text_layer, font);
-	text_layer_set_text_alignment(text_layer, GTextAlignmentLeft);
+  
+  // Set the text, font, and text alignment
+  text_layer_set_font(text_layer, font);
+  text_layer_set_text_alignment(text_layer, GTextAlignmentLeft);
   text_layer_set_text_color(text_layer, GColorWhite);
   text_layer_set_background_color(text_layer, GColorClear);
   text_layer_set_text(text_layer, "C:\\>");
-	
-	// Add the text layer to the window
-	layer_add_child(window_get_root_layer(window), text_layer_get_layer(text_layer));
+  
+  // Add the text layer to the window
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(text_layer));
 
-	// Push the window
-	window_stack_push(window, true);
+  // Push the window
+  window_stack_push(window, true);
   
   tick_timer_service_subscribe(MINUTE_UNIT, tick);
-	
+  
   //start_draw();
-	// App Logging!
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Just pushed a window!");
+  // App Logging!
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Just pushed a window!");
+  
+  srand(time(NULL));
+  app_focus_service_subscribe(focus_handler);
 }
 
 void handle_deinit(void) {
@@ -95,18 +109,20 @@ void handle_deinit(void) {
   tick_timer_service_unsubscribe();  
   if (timer) app_timer_cancel(timer);
   
-	// Destroy the text layer
-	text_layer_destroy(text_layer);
-	
-	// Destroy the window
-	window_destroy(window);
+  // Destroy the text layer
+  text_layer_destroy(text_layer);
+  
+  // Destroy the window
+  window_destroy(window);
   
   // Unload font
   fonts_unload_custom_font(font);
+  
+  app_focus_service_unsubscribe();
 }
 
 int main(void) {
-	handle_init();
-	app_event_loop();
-	handle_deinit();
+  handle_init();
+  app_event_loop();
+  handle_deinit();
 }
